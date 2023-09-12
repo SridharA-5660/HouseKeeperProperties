@@ -1,0 +1,132 @@
+#HouseKeeper Scheduling System
+
+#Database
+
+create database housekeeper;
+use  housekeeper;
+
+#admin table
+CREATE TABLE `admin` (
+  `admin_id` int NOT NULL AUTO_INCREMENT,
+  `hostel` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`admin_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+INSERT INTO `housekeeper`.`admin`
+(`admin_id`,`hostel`,`password`,`username`)
+VALUES
+(1,"HostelA","admin","John Doe");
+
+
+
+#Student table
+CREATE TABLE `student` (
+  `rollnumber` bigint NOT NULL,
+  `floor` int NOT NULL,
+  `hostel` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `room` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`rollnumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+INSERT INTO `housekeeper`.`student`
+(`rollnumber`,`floor`,`hostel`,`password`,`room`)
+VALUES
+(12345,4,"HostelA","password","203");
+
+INSERT INTO `housekeeper`.`student`
+(`rollnumber`,`floor`,`hostel`,`password`,`room`)
+VALUES
+(12346,4,"HostelA","pass1234","204");
+
+
+#Worker table
+CREATE TABLE `worker` (
+  `worker_id` bigint NOT NULL AUTO_INCREMENT,
+  `floor` int NOT NULL,
+  `hostel` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`worker_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `housekeeper`.`worker`
+(`worker_id`,`floor`,`hostel`,`name`)
+VALUES
+(1,4,"HostelA","David");
+
+
+INSERT INTO `housekeeper`.`worker`
+(`worker_id`,`floor`,`hostel`,`name`)
+VALUES
+(2,4,"HostelA","Johnson");
+
+
+#Clean request table
+CREATE TABLE `clean_request` (
+  `request_id` bigint NOT NULL AUTO_INCREMENT,
+  `clean_time` time DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `feedback_status` bit(1) NOT NULL,
+  `req_status` bit(1) NOT NULL,
+  `rollnumber` bigint DEFAULT NULL,
+  `worker_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`request_id`),
+  KEY `FK47xo5vv6uu6wh6cauwq03f51k` (`rollnumber`),
+  KEY `FKf0q0yidj1oes6yg82se2qbdf3` (`worker_id`),
+  CONSTRAINT `FK47xo5vv6uu6wh6cauwq03f51k` FOREIGN KEY (`rollnumber`) REFERENCES `student` (`rollnumber`),
+  CONSTRAINT `FKf0q0yidj1oes6yg82se2qbdf3` FOREIGN KEY (`worker_id`) REFERENCES `worker` (`worker_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+INSERT INTO `housekeeper`.`clean_request`
+(`request_id`,`clean_time`,`date`,`feedback_status`,`req_status`,`rollnumber`,`worker_id`)
+VALUES
+(1,'08:00:00','2023-09-08',1,1,12345,1);
+
+
+INSERT INTO `housekeeper`.`clean_request`
+(`request_id`,`clean_time`,`date`,`feedback_status`,`req_status`,`rollnumber`,`worker_id`)
+VALUES
+(2,'08:00:00','2023-09-08',1,1,12346,1);
+
+INSERT INTO `housekeeper`.`clean_request`
+(`request_id`,`clean_time`,`date`,`feedback_status`,`req_status`,`rollnumber`,`worker_id`)
+VALUES
+(3,'08:00:00','2023-09-08',0,1,12346,2);
+
+
+#feedback table
+CREATE TABLE `feedback` (
+  `feedback_id` bigint NOT NULL AUTO_INCREMENT,
+  `feedback` varchar(3000) DEFAULT NULL,
+  `request_id` bigint DEFAULT NULL,
+  `rollnumber` bigint DEFAULT NULL,
+  PRIMARY KEY (`feedback_id`),
+  KEY `FK96upbmjce91hbagr6030dy3ny` (`request_id`),
+  KEY `FK2257spm361ysobt3ecj8d5vry` (`rollnumber`),
+  CONSTRAINT `FK2257spm361ysobt3ecj8d5vry` FOREIGN KEY (`rollnumber`) REFERENCES `student` (`rollnumber`),
+  CONSTRAINT `FK96upbmjce91hbagr6030dy3ny` FOREIGN KEY (`request_id`) REFERENCES `clean_request` (`request_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `housekeeper`.`feedback`
+(`feedback_id`,`feedback`,`request_id`,`rollnumber`)
+VALUES
+(1,"Good service",1,12345);
+
+
+INSERT INTO `housekeeper`.`feedback`
+(`feedback_id`,`feedback`,`request_id`,`rollnumber`)
+VALUES
+(2,"Good service as usual",2,12346);
+
+
+select * from admin;
+select * from student;
+select * from worker;
+select * from clean_request;
+select * from feedback;
+
